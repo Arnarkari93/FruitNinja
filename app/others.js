@@ -53,3 +53,38 @@ export class HighScoreContainer extends TemplateWithBack {
     this.addChild(label);
   }
 }
+
+export class AboutGameContainer extends TemplateWithBack {
+
+  constructor(...args) {
+    super(...args);
+    this.init();
+  }
+
+  init() {
+    let board = new PIXI.Sprite.fromImage('assets/board.png');
+    board.width = 600;
+    board.x = 100;
+    board.y = 100;
+    this.addChild(board);
+
+    let content = "In Fruit Ninja, the player slices fruit with a blade controlled via the mouse. As the fruit \
+is thrown onto the screen, the player swipes the mouse pointer across the screen to \
+create a slicing motion, attempting to slice the fruit in half.Extra points are awarded for \
+slicing multiple fruits with one swipe, Players must slice all fruit if three fruits are missed, \
+the game end. Bombs are occasionally thrown onto the screen, and will also end the game \
+should the player slice them."
+
+    let text = new PIXI.Text(content, {
+                fontFamily : 'Comic Sans MS',
+                align : 'center',
+                fontSize: 30,
+                wordWrap: true,
+                wordWrapWidth: board.width - 50,
+               });
+    text.x = board.x + 30;
+    text.fontSize = 5;
+    text.y = board.y + 50;;
+    this.addChild(text);
+  }
+}
