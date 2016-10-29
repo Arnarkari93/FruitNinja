@@ -150,3 +150,34 @@ export class GameLabelContainer extends BaseContainer {
   }
 }
 
+export default class GameOptionsContainer extends BaseContainer {
+
+  constructor(options) {
+    super();
+    this.optionNames = options;
+  }
+
+  handleOptionSelection() {
+    let mouseData = this.parent.mouseData;
+    let selected = this.get('optionsContainer').detectSelection(mouseData);
+    return selected;
+  }
+
+  animate() {
+    if(!this.parent.load)
+      return;
+
+    // Draw stuff on load once
+    if(this.get('gameLabelContainer') == undefined) {
+      let gameLabelContainer = new GameLabelContainer();
+      this.add('gameLabelContainer', gameLabelContainer);
+    }
+
+    if(this.get('optionsContainer') == undefined) {
+      let optionsContainer = new OptionsContainer(this.optionNames);
+      this.add('optionsContainer', optionsContainer);
+    }
+    else
+      this.get('optionsContainer').animate();
+  }
+}
