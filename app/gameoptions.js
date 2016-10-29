@@ -12,10 +12,13 @@ export class OptionsContainer extends BaseContainer {
     this.y = 400;
     this.optionNames = options;
     this.drawCircles();
+    this.drawText();
+    this.drawFruit();
   }
 
   drawCircles() {
     for(let i=0; i<3; i++) {
+      let option = new PIXI.Sprite(PIXI.Texture.fromFrame('circle.png'));
       option.width = 200; option.height = 200;
       option.x = 250*i;
       if(i == 1) option.y = -100;
