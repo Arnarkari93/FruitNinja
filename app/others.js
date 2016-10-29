@@ -88,3 +88,33 @@ should the player slice them."
     this.addChild(text);
   }
 }
+
+export class StateTransitionContainer extends BaseContainer {
+
+  constructor(...args) {
+    super(...args);
+    this.h = Config.wh;
+    this.w = Config.ww;
+    this.init();
+  }
+
+  init() {
+    const topLayer = new PIXI.Graphics();
+    topLayer.beginFill(0x000000, 1);
+    topLayer.drawRect(0, 0, this.w, this.h);
+    topLayer.alpha = 0.0;
+    this.add('topLayer', topLayer);
+
+    /*const topLayerImage = new PIXI.Sprite.fromImage('assets/transition.gif');
+    topLayerImage.height = 100;
+    topLayerImage.width = 100;
+    topLayerImage.x = (this.w - 100) / 2;
+    topLayerImage.y = (this.h - 100) / 2;
+    this.addChild(topLayerImage);*/
+  }
+
+  animate() {
+    this.get('topLayer').alpha += 0.007; // transitioning timer is 100 frames
+  }
+// End class
+}
