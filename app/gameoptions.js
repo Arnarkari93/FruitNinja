@@ -128,3 +128,25 @@ export class TextOnPerimiterContainer extends BaseContainer {
   }
 // End class
 }
+
+export class GameLabelContainer extends BaseContainer {
+  // Responsible for displaying label "Fruit Ninja" on board
+  // This assumes that assets are already loaded
+
+  constructor(...args) {
+    super(...args);
+    this.x = 100;
+    this.y = 50;
+    this.drawLabel();
+  }
+
+  drawLabel() {
+    let fruit = new PIXI.Sprite(PIXI.Texture.fromFrame('logofruit.png'));
+    fruit.width = 400; fruit.height = 150;
+    let ninja = new PIXI.Sprite(PIXI.Texture.fromFrame('logoninja.png'));
+    ninja.x = 450; ninja.width = 300; ninja.height = 150;
+    this.addChild(fruit);
+    this.addChild(ninja);
+  }
+}
+
