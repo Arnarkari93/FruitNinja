@@ -36,3 +36,20 @@ class TemplateWithBack extends BaseContainer {
     return this.detectSelection(mouseData);
   }
 }
+
+export class HighScoreContainer extends TemplateWithBack {
+
+  constructor(...args) {
+    super(...args);
+    this.init();
+  }
+
+  init() {
+    let label = new PIXI.Sprite.fromImage('assets/highscore.png');
+    label.anchor.x = 0.5; label.anchor.y = 0.5;
+    label.width = 300;
+    label.x = Config.ww/2;
+    label.y = Config.wh * 1/4;
+    this.addChild(label);
+  }
+}
