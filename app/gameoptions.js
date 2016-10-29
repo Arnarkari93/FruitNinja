@@ -93,3 +93,38 @@ export class OptionsContainer extends BaseContainer {
   }
 // End class
 }
+
+export class TextOnPerimiterContainer extends BaseContainer {
+
+  constructor(center, radius, text, style) {
+    super();
+    this.center = center;
+    this.r = radius;
+    this.text = text;
+    this.style = style;
+    this.drawText();
+  }
+
+  drawText() {
+    // PIXI pivot abnormal behaviour
+    let theta = Math.PI/4;
+    for(let i=0; i<this.text.length; i++) {
+      let text = new PIXI.Text(this.text[i], this.style);
+      text.anchor.x = 0.5; text.anchor.y = 0.5;
+      text.pivot.x = 0;
+      text.x = this.center.x;
+      text.pivot.y = this.r;
+      text.y = text.pivot.y + (this.center.y - this.r);
+      console.log(text.pivot.y);
+      text.rotation = theta + i*0.3;
+      this.addChild(text);
+    }
+  }
+
+  animate() {
+    this.children.forEach((text) => {
+      text.rotation += 0.01;
+    });
+  }
+// End class
+}
