@@ -164,6 +164,7 @@ export default class GameOptionsContainer extends BaseContainer {
   constructor(options) {
     super();
     this.optionNames = options;
+    this.loading = true;
     this.timestart = +new Date;
   }
 
@@ -187,6 +188,11 @@ export default class GameOptionsContainer extends BaseContainer {
       (+new Date - this.timestart)/1000 < 0.5){
       this.animateLoader();
       return;
+    }
+
+    if(this.loading) {
+      this.loading = false;
+      window.dispatchEvent(new Event('resize'));
     }
 
     this.remove('loaderContainer');

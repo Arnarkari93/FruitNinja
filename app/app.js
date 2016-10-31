@@ -209,6 +209,7 @@ class Root extends BaseContainer {
 
 const stage = new Root();
 
+let prev = null;
 
 function resizeGameContainer() {
 
@@ -226,20 +227,32 @@ function resizeGameContainer() {
     }
   }
   else {
-    if(stage.containerChange) {
-      let scale = window.innerHeight/Config.wh;
-      if(window.innerHeight < 400) scale += 0.05;
-      // let scale = window.innerWidth/Config.ww;
-      gameContainer.scale.x *= scale;
-      gameContainer.scale.y *= scale;
-      stage.containerChange = false;
+    if(gameContainer.loading) {
+      prev = {'x': gameContainer.scale.x, 'y': gameContainer.scale.y};
+      gameContainer.scale.x *= window.innerWidth/Config.ww;
+      gameContainer.scale.y *= window.innerHeight/Config.wh;
     }
-    else {
-      let scale = renderer.height/stage.h;
-      if(renderer.width < 400) scale += 0.05;
-      // let scale = window.innerWidth/Config.ww;
-      gameContainer.scale.x *= scale;
-      gameContainer.scale.y *= scale;
+    else{
+      if(prev != null) {
+        gameContainer.scale.x = prev.x;
+        gameContainer.scale.y = prev.y;
+      }
+
+      if(stage.containerChange) {
+        let scale = window.innerHeight/Config.wh;
+        if(window.innerHeight < 400) scale += 0.05;
+        // let scale = window.innerWidth/Config.ww;
+        gameContainer.scale.x *= scale;
+        gameContainer.scale.y *= scale;
+        stage.containerChange = false;
+      }
+      else {
+        let scale = renderer.height/stage.h;
+        if(renderer.width < 400) scale += 0.05;
+        // let scale = window.innerWidth/Config.ww;
+        gameContainer.scale.x *= scale;
+        gameContainer.scale.y *= scale;
+      }
     }
   }
 }
