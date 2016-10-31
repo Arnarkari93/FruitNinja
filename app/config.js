@@ -6,7 +6,7 @@ export const Config = {
   },
   'acc': 0.1,
   'drops': {
-  	'rad': 10,
+  	'rad': 20,
   },
   'halfFruit': {
     'size': 80
@@ -20,12 +20,20 @@ export const Config = {
 
 export const imageMappings = {};
 
-let dropsColor=['rgba(255, 44, 44, 0.9)','rgba(0, 193, 44, 0.9)',
+/*let dropsColor=['rgba(255, 44, 44, 0.9)','rgba(0, 193, 44, 0.9)',
     'rgba(255, 39, 44, 0.9)','rgba(255, 255, 0, 0.9)',
     'rgba(255, 255, 0, 0.9)','rgba(255, 255, 0, 0.9)',
     'rgba(255, 44, 44, 0.9)','rgba(0, 193, 44, 0.9)',
     'rgba(255, 39, 44, 0.9)','rgba(255, 255, 0, 0.9)','',
     'rgba(0,0,255,0.4)','rgba(255, 255, 0, 0.9)','rgba(0,0,255,0.2)'];
+*/
+
+let dropsColor=[0xff2c2c, 0x00c12c,
+    0xff272c, 0xffff00,
+    0xff2c2c, 0xffff00,
+    0xff2c2c, 0x00c12c,
+    0xff272c, 0xffff00,"",
+    0x0000ff, 0xffff00, 0x0000ff];
 
 imageMappings.numFruits = 10;
 for(let i=0; i<imageMappings.numFruits; i++) {
