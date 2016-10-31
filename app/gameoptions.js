@@ -124,7 +124,6 @@ export class TextOnPerimiterContainer extends BaseContainer {
       text.x = this.center.x;
       text.pivot.y = this.r;
       text.y = text.pivot.y + (this.center.y - this.r);
-      console.log(text.pivot.y);
       text.rotation = theta + i*0.3;
       this.addChild(text);
     }
@@ -173,7 +172,7 @@ export default class GameOptionsContainer extends BaseContainer {
   }
 
   animate() {
-    if(!this.parent.load)
+    if(this.parent.filesLoaded < this.parent.filesToLoad)
       return;
 
     // Draw stuff on load once

@@ -7,7 +7,6 @@ class TemplateWithBack extends BaseContainer {
   // Template holding back functionality in bottom right corner
 
   constructor(...args) {
-    console.log('in init');
     super(...args);
 
     let back = new PIXI.Sprite(PIXI.Texture.fromFrame('back.png'));
@@ -26,7 +25,6 @@ class TemplateWithBack extends BaseContainer {
     if(mouseData.length < 2) return;
 
     let [p1, p2] = mouseData;
-    console.log(isIntersecting(p1, p2, this.get('back')));
     if(isIntersecting(p1, p2, this.get('back')))
       return true;
   }
@@ -142,7 +140,7 @@ export class LoaderContainer extends BaseContainer {
     loader.beginFill(0x999999, 1);
     loader.drawRect(this.w/2 - this.loaderWidth/2,
                 this.h/2 - this.loaderHeight/2,
-                this.loaderWidth,
+                this.loaderWidth * this.percentage,
                 this.loaderHeight
           );
     this.add('loader', loader);
