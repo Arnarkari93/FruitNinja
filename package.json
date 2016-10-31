@@ -9,7 +9,7 @@
   "scripts": {
     "start": "npm run build && webpack-dev-server --content-base ./build/ --hot --inline",
     "webpack": "webpack -p",
-    "build": "npm run webpack"
+    "build": "npm run webpack && cp -r assets build/"
   },
   "dependencies": {
     "pixi.js": "^3.0.11"
