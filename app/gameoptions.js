@@ -36,7 +36,7 @@ export class OptionsContainer extends BaseContainer {
 
     for(let i=0; i < optionCircles.length; i++) {
       let option = optionCircles[i];
-      if(isIntersecting(p1, p2, option))
+      if(isIntersecting(p1, p2, option.getBounds()))
         return this.optionNames[i];
     }
     return;
@@ -53,13 +53,13 @@ export class OptionsContainer extends BaseContainer {
       text.forEach((word, i) => {
         word = word[0].toUpperCase() + word.slice(1);
         text[i] = word;
-      })
+      });
       text = text.join(" ");
       let textContainer = new TextOnPerimiterContainer({
                               'x': option.x + r,
                               'y': option.y + r
                             }, r - imageExtraPadding,
-                            text, {}
+                            text
                           );
       this.add('textsContainer', textContainer);
     }
@@ -99,12 +99,18 @@ export class OptionsContainer extends BaseContainer {
 
 export class TextOnPerimiterContainer extends BaseContainer {
 
-  constructor(center, radius, text, style) {
+  constructor(center, radius, text) {
     super();
     this.center = center;
     this.r = radius;
     this.text = text;
-    this.style = style;
+    this.style = {
+              fontFamily:'Arial',
+              fontSize: 24,
+              fill: '#686868',
+              align: 'center',
+              fontWeight: 'bolder',
+            };
     this.drawText();
   }
 
