@@ -1,6 +1,7 @@
 import PIXI from 'pixi.js';
 import BaseContainer from './basecontainer.js';
 import { isIntersecting } from './helpers.js';
+import { LoaderContainer } from './others.js';
 
 export class OptionsContainer extends BaseContainer {
   // Responsible for drawing options on board
@@ -163,17 +164,32 @@ export default class GameOptionsContainer extends BaseContainer {
   constructor(options) {
     super();
     this.optionNames = options;
+    this.timestart = +new Date;
   }
 
   handleOptionSelection() {
     let mouseData = this.parent.mouseData;
+    if(this.get('optionsContainer') == undefined) return;
     let selected = this.get('optionsContainer').detectSelection(mouseData);
     return selected;
   }
 
+  animateLoader() {
+    this.remove('loaderContainer');
+    let percentage = this.parent.filesLoaded/this.parent.filesToLoad;
+    percentage = Math.min(percentage, (+new Date - this.timestart)/500);
+    let loader = new LoaderContainer(percentage);
+    this.add('loaderContainer', loader);
+  }
+
   animate() {
-    if(this.parent.filesLoaded < this.parent.filesToLoad)
+    if((this.parent.filesLoaded < this.parent.filesToLoad) ||
+      (+new Date - this.timestart)/1000 < 0.5){
+      this.animateLoader();
       return;
+    }
+
+    this.remove('loaderContainer');
 
     // Draw stuff on load once
     if(this.get('gameLabelContainer') == undefined) {

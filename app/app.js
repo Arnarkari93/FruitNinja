@@ -29,7 +29,6 @@ class Root extends BaseContainer {
     this.cutting = false; // true if Knife in cutting mode
     this.mouseData = []; // data of mouse movement
 
-    this.timestart = +new Date;
     this.containerChange = true;
     this.counter = 0;
     this
@@ -46,6 +45,13 @@ class Root extends BaseContainer {
     this.state = "initial";
     this.filesToLoad = 1;
     this.filesLoaded = 0;
+
+
+
+    let options = ["about game", "new game", "high score"];
+    let gameContainer = new GameOptionsContainer(options);
+    this.add('gameContainer', gameContainer);
+
     this.loadTextures();
   }
 
@@ -53,11 +59,7 @@ class Root extends BaseContainer {
     let bg = new PIXI.Sprite(PIXI.Texture.fromFrame('bg.png'));
     bg.height = this.h; bg.width = this.w;
     bg.interactive = true;
-    this.add('bg', bg);
-
-    let options = ["about game", "new game", "high score"];
-    let gameContainer = new GameOptionsContainer(options);
-    this.add('gameContainer', gameContainer);
+    this.add('bg', bg, 0);
   }
 
   assetsLoaded() {
@@ -183,24 +185,10 @@ class Root extends BaseContainer {
     return gameContainer;
   }
 
-  animateLoader() {
-    this.remove('loaderContainer');
-    let percentage = this.filesLoaded/this.filesToLoad;
-    percentage = Math.min(percentage, (+new Date - this.timestart)/2000);
-    let loader = new LoaderContainer(percentage);
-    this.add('loaderContainer', loader);
-    resize();
-  }
-
   animate() {
-    if(this.pause) return;
-
-    if((this.filesLoaded < this.filesToLoad) || (+new Date - this.timestart)/1000 < 2){
-      this.animateLoader();
+    if(this.pause)
       return;
-    }
 
-    this.remove('loaderContainer');
 
     this.get('gameContainer').animate();
 
