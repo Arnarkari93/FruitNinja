@@ -118,3 +118,43 @@ export class StateTransitionContainer extends BaseContainer {
   }
 // End class
 }
+
+export class LoaderContainer extends BaseContainer {
+
+  constructor(percentage) {
+    super();
+    this.w = Config.ww;
+    this.h = Config.wh;
+    this.percentage = percentage;
+    this.loaderWidth = this.w/2;
+    this.loaderHeight = 20;
+    this.init();
+  }
+
+  init() {
+    const layer = new PIXI.Graphics();
+    layer.beginFill(0x000000, 1);
+    layer.drawRect(0, 0, this.w, this.h);
+    layer.alpha = 0.5;
+    this.add('layer', layer);
+
+    const loader = new PIXI.Graphics();
+    loader.beginFill(0x999999, 1);
+    loader.drawRect(this.w/2 - this.loaderWidth/2,
+                this.h/2 - this.loaderHeight/2,
+                this.loaderWidth,
+                this.loaderHeight
+          );
+    this.add('loader', loader);
+
+    const boundary = new PIXI.Graphics();
+    boundary.lineStyle(3, 0xFFFFFF);
+    boundary.beginFill(0xFFFFFF, 0);
+    boundary.drawRect(this.w/2 - this.loaderWidth/2,
+                this.h/2 - this.loaderHeight/2,
+                this.loaderWidth,
+                this.loaderHeight
+          );
+    this.add('boundary', boundary);
+  }
+}
