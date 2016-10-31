@@ -45,7 +45,9 @@ export default class BaseContainer extends PIXI.Container {
 
   remove(name, uid=null) {
     if(uid == null) {
-      this.removeChild(this.get(name));
+      for(let e of this.getAll(name)){
+        this.removeChild(e);
+      }
       delete this[name];
     }
     else {
