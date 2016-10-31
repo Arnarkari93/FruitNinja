@@ -2,6 +2,7 @@ import PIXI from 'pixi.js';
 import { Config, imageMappings } from './config.js';
 import BaseContainer from './basecontainer.js';
 import { isIntersecting } from './helpers.js'
+import { LoaderContainer } from './others.js';
 
 export default class GamePlayContainer extends BaseContainer {
 
@@ -12,28 +13,17 @@ export default class GamePlayContainer extends BaseContainer {
     this.score = 0;
     this.missed = 0;
     this.timestart = +new Date;
+    this.filesToLoad = 4;
+    this.filesLoaded = 0;
     this.loadTextures();
   }
 
-  fruitsLoaded() {
-    this.loaded = true; // Assuming all other loaders would be loaded
-                // when they will be accessed
-    console.log("Fruits loaded");
-  }
-
-  halfFruitsLoaded() {
-    console.log("Half fruits loaded");
-  }
-
-  splashesLoaded() {
-    console.log("Splashes loaded");
-  }
-
-  numsLoaded() {
-    console.log("Numbers loaded");
+  assetLoaded() {
+    this.filesLoaded += 1;
   }
 
   handleOptionSelection() {
+    // For pause, resume, back, etc
   }
 
   loadTextures() {
@@ -41,25 +31,25 @@ export default class GamePlayContainer extends BaseContainer {
       .add('assets/fruits.json')
       .load(() => {
         let self = this;
-        self.fruitsLoaded();
+        self.assetLoaded();
       });
     PIXI.loader
       .add('assets/halffruits.json')
       .load(() => {
         let self = this;
-        self.halfFruitsLoaded();
+        self.assetLoaded();
       });
     PIXI.loader
       .add('assets/splashes.json')
       .load(() => {
         let self = this;
-        self.splashesLoaded();
+        self.assetLoaded();
       });
     PIXI.loader
       .add('assets/nums.json')
       .load(() => {
         let self = this;
-        self.numsLoaded();
+        self.assetLoaded();
       });
   }
 
@@ -117,9 +107,22 @@ export default class GamePlayContainer extends BaseContainer {
     this.add('fruits', fruit);
   }
 
+  animateLoader() {
+    this.remove('loaderContainer');
+    let percentage = this.filesLoaded/this.filesToLoad;
+    percentage = Math.min(percentage, (+new Date - this.timestart)/500);
+    let loader = new LoaderContainer(percentage);
+    this.add('loaderContainer', loader);
+  }
+
   animate() {
     // Images not loaded
-    if(!this.loaded) return;
+    if((this.filesLoaded < this.filesToLoad) || (+new Date - this.timestart)/1000 < 0.5){
+      this.animateLoader();
+      return;
+    }
+
+    this.remove('loaderContainer');
 
     if(this.parent.pause) return;
 
