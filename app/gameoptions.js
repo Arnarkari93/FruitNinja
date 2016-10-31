@@ -178,7 +178,8 @@ export default class GameOptionsContainer extends BaseContainer {
   animateLoader() {
     this.remove('loaderContainer');
     let percentage = this.parent.filesLoaded/this.parent.filesToLoad;
-    percentage = Math.min(percentage, (+new Date - this.timestart)/500);
+    percentage = Math.max(percentage, (+new Date - this.timestart)/500);
+    percentage = Math.min(percentage, 1);
     let loader = new LoaderContainer(percentage);
     this.add('loaderContainer', loader);
   }
