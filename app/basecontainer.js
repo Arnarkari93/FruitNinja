@@ -10,14 +10,17 @@ export default class BaseContainer extends PIXI.Container {
     return `${Math.random()}`;
   }
 
-  add(name, child) {
+  add(name, child, at=null) {
     if(this[name] == undefined)
       this[name] = new Set();
 
     let uid = this.randomName();
     child.name = uid;
     this[name].add(uid);
-    this.addChild(child);
+    if(at == null)
+      this.addChild(child);
+    else
+      this.addChildAt(child, at);
   }
 
   get(name, uid=null) {
