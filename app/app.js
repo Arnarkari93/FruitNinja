@@ -4,7 +4,7 @@ import BaseContainer from './basecontainer.js';
 import Knife from './knife.js';
 import GameOptionsContainer from './gameoptions.js';
 import GamePlayContainer from './gameplay.js';
-import { HighScoreContainer, AboutGameContainer, StateTransitionContainer } from './others.js';
+import { HighScoreContainer, AboutGameContainer, LoaderContainer } from './others.js';
 import { Config } from './config.js';
 
 const renderer = PIXI.autoDetectRenderer(window.innerWidth,
@@ -13,7 +13,7 @@ const renderer = PIXI.autoDetectRenderer(window.innerWidth,
   transparent: false,
   resolution: window.devicePixelRatio,
   autoResize: true,
-  backgroundColor: 0x999999
+  backgroundColor: 0x5D371A
 });
 
 document.body.appendChild(renderer.view);
@@ -25,14 +25,12 @@ class Root extends BaseContainer {
     this.w = Config.ww;
     this.interactive = true;
 
-    this.mode = 1; // game has three modes
     this.pause = false;
     this.cutting = false; // true if Knife in cutting mode
-    this.transitioning = false; // true when transitioning from one
-                                // state to other
     this.mouseData = []; // data of mouse movement
 
-    this.containerChange = false;
+    this.timestart = +new Date;
+    this.containerChange = true;
     this.counter = 0;
     this
       .on('mousedown', this.onMouseDown())
@@ -46,7 +44,8 @@ class Root extends BaseContainer {
       //.on('click', this.onClick)
 
     this.state = "initial";
-    this.load = false;
+    this.filesToLoad = 1;
+    this.filesLoaded = 0;
     this.loadTextures();
   }
 
@@ -62,9 +61,8 @@ class Root extends BaseContainer {
   }
 
   assetsLoaded() {
-    console.log("Initial assets loaded");
     this.gameInit();
-    this.load = true;
+    this.filesLoaded += 1;
     resize();
   }
 
@@ -185,38 +183,33 @@ class Root extends BaseContainer {
     return gameContainer;
   }
 
-  startStateTransitionAnimation() {
-    this.transitioning = true;
-    this.transitionTimer = 100;
-    let stateTransitionContainer = new StateTransitionContainer();
-    this.add('stateTransitionContainer', stateTransitionContainer);
-    resizeTransitionContainer();
+  animateLoader() {
+    this.remove('loaderContainer');
+    let percentage = this.filesLoaded/this.filesToLoad;
+    percentage = Math.min(percentage, (+new Date - this.timestart)/2000);
+    let loader = new LoaderContainer(percentage);
+    this.add('loaderContainer', loader);
+    resize();
   }
 
   animate() {
-    if(this.pause || !this.load) return;
+    if(this.pause) return;
+
+    if((this.filesLoaded < this.filesToLoad) || (+new Date - this.timestart)/1000 < 2){
+      this.animateLoader();
+      return;
+    }
+
+    this.remove('loaderContainer');
 
     this.get('gameContainer').animate();
 
-    if(this.transitioning) {
-      this.get('stateTransitionContainer').animate();
-      if(this.transitionTimer <= 0) {
-        this.remove('stateTransitionContainer');
+    let action = this.get('gameContainer').handleOptionSelection();
+    if(action != undefined) {
         this.remove('gameContainer');
-        let gameContainer = this.reduce(this.transitionAction);
-        this.add('gameContainer', gameContainer);
         this.containerChange = true;
+        this.add('gameContainer', this.reduce(action));
         resizeGameContainer();
-        this.transitioning = false;
-      }
-      this.transitionTimer -= 1;
-    }
-    else {
-      let action = this.get('gameContainer').handleOptionSelection();
-      if(action != undefined) {
-        this.transitionAction = action;
-        this.startStateTransitionAnimation();
-      }
     }
 
     if(this.get('knife') != undefined)
@@ -267,11 +260,13 @@ function resize(){
   // Called after load is complete
   renderer.resize(window.innerWidth, window.innerHeight);
 
-  let bg = stage.get('bg');
-  bg.scale.x *= renderer.width/stage.w;
-  bg.scale.y *= renderer.height/stage.h;
-  // resize transition animation too
-  resizeGameContainer();
+  if(stage.filesLoaded == stage.filesToLoad) {
+    let bg = stage.get('bg');
+    bg.scale.x *= renderer.width/stage.w;
+    bg.scale.y *= renderer.height/stage.h;
+    // resize transition animation too
+    resizeGameContainer();
+  }
 
   stage.w = renderer.width;
   stage.h = renderer.height;
