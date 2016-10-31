@@ -25,7 +25,7 @@ class TemplateWithBack extends BaseContainer {
     if(mouseData.length < 2) return;
 
     let [p1, p2] = mouseData;
-    if(isIntersecting(p1, p2, this.get('back')))
+    if(isIntersecting(p1, p2, this.get('back').getBounds()))
       return true;
   }
 
