@@ -32,6 +32,7 @@ class Root extends BaseContainer {
                                 // state to other
     this.mouseData = []; // data of mouse movement
 
+    this.containerChange = false;
     this.counter = 0;
     this
       .on('mousedown', this.onMouseDown())
@@ -204,6 +205,7 @@ class Root extends BaseContainer {
         this.remove('gameContainer');
         let gameContainer = this.reduce(this.transitionAction);
         this.add('gameContainer', gameContainer);
+        this.containerChange = true;
         resizeGameContainer();
         this.transitioning = false;
       }
@@ -226,6 +228,56 @@ class Root extends BaseContainer {
 
 const stage = new Root();
 
+
+function resizeGameContainer() {
+
+  let gameContainer = stage.get('gameContainer');
+  let state = stage.state;
+  if(state == "archade mode" || state == "zen mode") {
+    if(stage.containerChange) {
+      gameContainer.scale.x *= window.innerWidth/Config.ww;
+      gameContainer.scale.y *= window.innerHeight/Config.wh;
+      stage.containerChange = false;
+    }
+    else {
+      gameContainer.scale.x *= renderer.width/stage.w - 0.1;
+      gameContainer.scale.y *= renderer.height/stage.h;
+    }
+  }
+  else {
+    if(stage.containerChange) {
+      let scale = window.innerHeight/Config.wh;
+      if(window.innerHeight < 400) scale += 0.05;
+      // let scale = window.innerWidth/Config.ww;
+      gameContainer.scale.x *= scale;
+      gameContainer.scale.y *= scale;
+      stage.containerChange = false;
+    }
+    else {
+      let scale = renderer.height/stage.h;
+      if(renderer.width < 400) scale += 0.05;
+      // let scale = window.innerWidth/Config.ww;
+      gameContainer.scale.x *= scale;
+      gameContainer.scale.y *= scale;
+    }
+  }
+}
+
+function resize(){
+  // Called after load is complete
+  renderer.resize(window.innerWidth, window.innerHeight);
+
+  let bg = stage.get('bg');
+  bg.scale.x *= renderer.width/stage.w;
+  bg.scale.y *= renderer.height/stage.h;
+  // resize transition animation too
+  resizeGameContainer();
+
+  stage.w = renderer.width;
+  stage.h = renderer.height;
+}
+/*
+
 function resizeGameContainer() {
   let gameContainer = stage.get('gameContainer');
   let state = gameContainer.state;
@@ -236,11 +288,10 @@ function resizeGameContainer() {
   else {
     let scale = window.innerHeight/Config.wh;
     if(window.innerHeight < 400) scale += 0.05;
-    /*let scale = window.innerWidth/Config.ww;*/
+    // let scale = window.innerWidth/Config.ww;
     gameContainer.scale.x *= scale;
     gameContainer.scale.y *= scale;
   }
-  renderer.resize(window.innerWidth, window.innerHeight);
 }
 
 function resize(){
@@ -252,7 +303,8 @@ function resize(){
   // resize transition animation too
 
   resizeGameContainer();
-}
+  renderer.resize(window.innerWidth, window.innerHeight);
+}*/
 
 function resizeTransitionContainer() {
 
