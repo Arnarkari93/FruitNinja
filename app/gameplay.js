@@ -146,7 +146,7 @@ export default class GamePlayContainer extends BaseContainer {
         }
         count++;
       }
-      if (count < 10)
+      if (count < 5)
         self.addNewFruit();
       return fruitsMissed;
 
