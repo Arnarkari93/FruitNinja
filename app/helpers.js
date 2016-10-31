@@ -1,6 +1,6 @@
 export function isIntersecting(p1, p2, element) {
   /*
-  Input: two points, a pixi element
+  Input: two points, a rectangle element
   Output: true if line segment joining p1 and p2 passes through element
   */
 
@@ -21,7 +21,7 @@ export function isIntersecting(p1, p2, element) {
 
   for(let lambda=0; lambda <= 1; lambda += 1/npoints) {
     let p = linearCombination(p1, p2, lambda);
-    if(element.containsPoint(new PIXI.Point(p.x, p.y)))
+    if(element.contains(p.x, p.y))
       return true;
   }
   return false;
