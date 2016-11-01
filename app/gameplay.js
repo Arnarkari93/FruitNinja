@@ -163,17 +163,21 @@ export default class GamePlayContainer extends BaseContainer {
 
       let drops = self.getAll('drops');
       for(let drop of drops) {
-        if(drop.details.radius < 0){
+        if(drop.scale.x < 0){
           self.remove('drops', drop.name);
         }
         else {
           // Move drops while decreasing size
           let details = drop.details;
-          details.x += details.vx*1;
+          /*details.x += details.vx*1;
           details.y += details.vy*1;
           details.radius -= 1*1;
           drop.clear();
-          self.drawDrop(drop, details);
+          self.drawDrop(drop, details);*/
+          drop.x += details.vx;
+          drop.y += details.vy;
+          drop.scale.x -= 0.05;
+          drop.scale.y -= 0.05;
         }
       }
     }
@@ -298,18 +302,20 @@ export default class GamePlayContainer extends BaseContainer {
   }
 
   drawDrop(drop, details) {
-    drop.lineStyle(2, details.color);
-    drop.beginFill(details.color, 1);
-    drop.drawCircle(details.x, details.y, details.radius);
-    drop.endFill();
-    drop.vx = details.vx; drop.vy = details.vy;
-    //drop.visible = details.visible;
-    drop.details = details;
   }
 
   getNewDrop(details) {
     const drop = new PIXI.Graphics();
-    this.drawDrop(drop, details)
+    drop.x = details.x;
+    drop.y = details.y;
+    drop.lineStyle(2, details.color);
+    drop.beginFill(details.color, 1);
+    drop.drawCircle(0, 0, details.radius);
+    drop.endFill();
+    drop.vx = details.vx; drop.vy = details.vy;
+    //drop.visible = details.visible;
+    drop.details = details;
+    //this.drawDrop(drop, details)
     return drop;
   }
 
