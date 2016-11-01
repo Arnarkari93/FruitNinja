@@ -160,20 +160,21 @@ export default class GamePlayContainer extends BaseContainer {
     // Handle animations for drops
     function animateDrops(self) {
       // Remove drops with r <= 0 by reverse traversing
+
       let drops = self.getAll('drops');
       for(let drop of drops) {
-        if(drop.height > 0) {
+        if(drop.details.radius < 0){
+          self.remove('drops', drop.name);
+        }
+        else {
           // Move drops while decreasing size
           let details = drop.details;
-          details.x += details.vx;
-          details.y += details.vy;
-          details.radius -= 1;
-          //details.visible = (Math.floor(Math.random()*2) == 0);
-          self.add('drops', self.getNewDrop(details));
-
-          /*drop.radius -= 1;*/
+          details.x += details.vx*1;
+          details.y += details.vy*1;
+          details.radius -= 1*1;
+          drop.clear();
+          self.drawDrop(drop, details);
         }
-        self.remove('drops', drop.name);
       }
     }
     animateDrops(this);
@@ -296,8 +297,7 @@ export default class GamePlayContainer extends BaseContainer {
     }
   }
 
-  getNewDrop(details) {
-    const drop = new PIXI.Graphics();
+  drawDrop(drop, details) {
     drop.lineStyle(2, details.color);
     drop.beginFill(details.color, 1);
     drop.drawCircle(details.x, details.y, details.radius);
@@ -305,6 +305,11 @@ export default class GamePlayContainer extends BaseContainer {
     drop.vx = details.vx; drop.vy = details.vy;
     //drop.visible = details.visible;
     drop.details = details;
+  }
+
+  getNewDrop(details) {
+    const drop = new PIXI.Graphics();
+    this.drawDrop(drop, details)
     return drop;
   }
 

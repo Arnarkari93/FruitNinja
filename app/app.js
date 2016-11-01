@@ -46,8 +46,6 @@ class Root extends BaseContainer {
     this.filesToLoad = 1;
     this.filesLoaded = 0;
 
-
-
     let options = ["about game", "new game", "high score"];
     let gameContainer = new GameOptionsContainer(options);
     this.add('gameContainer', gameContainer);
