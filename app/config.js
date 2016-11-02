@@ -1,54 +1,50 @@
 export const Config = {
-  'fruit': {
-    'size': 80,
-    'vx': 5,
-    'vy': -10,
+  fruit: {
+    size: 80,
+    vx: 5,
+    vy: -10,
   },
-  'acc': 0.1,
-  'drops': {
-  	'rad': 20,
+  acc: 0.1,
+  drops: {
+    rad: 20,
   },
-  'halfFruit': {
-    'size': 80
+  halfFruit: {
+    size: 80,
   },
-  'splash': {
-    'size': 150
+  splash: {
+    size: 150,
   },
-  'ww': 1301,
-  'wh': 654,
+  ww: 1301,
+  wh: 654,
 };
 
 export const imageMappings = {};
 
-/*let dropsColor=['rgba(255, 44, 44, 0.9)','rgba(0, 193, 44, 0.9)',
-    'rgba(255, 39, 44, 0.9)','rgba(255, 255, 0, 0.9)',
-    'rgba(255, 255, 0, 0.9)','rgba(255, 255, 0, 0.9)',
-    'rgba(255, 44, 44, 0.9)','rgba(0, 193, 44, 0.9)',
-    'rgba(255, 39, 44, 0.9)','rgba(255, 255, 0, 0.9)','',
-    'rgba(0,0,255,0.4)','rgba(255, 255, 0, 0.9)','rgba(0,0,255,0.2)'];
-*/
-
-let dropsColor=[0xff2c2c, 0x00c12c,
-    0xff272c, 0xffff00,
-    0xff2c2c, 0xffff00,
-    0xff2c2c, 0x00c12c,
-    0xff272c, 0xffff00,"",
-    0x0000ff, 0xffff00, 0x0000ff];
+const dropsColor = [
+  0xff2c2c, 0x00c12c,
+  0xff272c, 0xffff00,
+  0xff2c2c, 0xffff00,
+  0xff2c2c, 0x00c12c,
+  0xff272c, 0xffff00,
+  '', 0x0000ff,
+  0xffff00, 0x0000ff,
+];
 
 imageMappings.numFruits = 10;
-for(let i=0; i<imageMappings.numFruits; i++) {
+
+for (let i = 0; i < imageMappings.numFruits; i += 1) {
   imageMappings[`fruit${i}`] = {
-    'hf1': `halffruit${2*i}`,
-    'hf2': `halffruit${2*i+1}`,
-    'splash': `splash${i}`,
-    'dropColor': dropsColor[i],
-  }
+    hf1: `halffruit${2 * i}`,
+    hf2: `halffruit${2 * i + 1}`,
+    splash: `splash${i}`,
+    dropColor: dropsColor[i],
+  };
 }
 
-let specials = ['bomb', 'double', 'flenzy', 'freeze'];
+const specials = ['bomb', 'double', 'flenzy', 'freeze'];
 
 specials.forEach((e, i) => {
   imageMappings[e] = {
     // set mappings of special fruits and bomb here
-  }
+  };
 });
