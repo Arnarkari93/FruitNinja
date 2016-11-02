@@ -4,17 +4,13 @@ export function isIntersecting(p1, p2, element) {
    * Output: true if line segment joining p1 and p2 passes through element
    */
 
-  function linearCombination(p1, p2, lambda) {
-    return {
-      x: lambda * p1.x + (1 - lambda) * p2.x,
-      y: lambda * p1.y + (1 - lambda) * p2.y,
-    };
-  }
+  const linearCombination = (p1, p2, lambda) => ({
+    x: lambda * p1.x + (1 - lambda) * p2.x,
+    y: lambda * p1.y + (1 - lambda) * p2.y,
+  });
 
-  function distance(p1, p2) {
-    return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y -
-      p2.y, 2));
-  }
+  const distance = (p1, p2) => (Math.sqrt(Math.pow(p1.x - p2.x, 2) +
+      Math.pow(p1.y - p2.y, 2)));
 
   /**
    * Calculate the number of points to choose b/w the mouse points
