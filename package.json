@@ -10,7 +10,7 @@
     "start": "npm run build && webpack-dev-server --content-base ./build/ --hot --inline",
     "webpack": "webpack -p",
     "build": "npm run webpack && cp -r assets build/",
-    "lint": "eslint app/others.js"
+    "lint": "eslint app/gameplay.js"
   },
   "dependencies": {
     "pixi.js": "^3.0.11"
