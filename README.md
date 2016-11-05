@@ -9,3 +9,5 @@ Keywords: PixiJS, ES6, Webpack
 2. npm install
 3. npm run start
 4. Visit localhost:8080
+
+![screenshot](https://cloud.githubusercontent.com/assets/7158765/19938460/02a86cdc-a14b-11e6-93dd-18ea467a9d3b.png)
