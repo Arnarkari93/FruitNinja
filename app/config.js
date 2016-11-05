@@ -6,7 +6,7 @@ export const Config = {
   },
   acc: 0.1,
   drops: {
-    rad: 20,
+    rad: 25,
   },
   halfFruit: {
     size: 80,

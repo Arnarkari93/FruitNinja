@@ -56,10 +56,10 @@ export default class GamePlayContainer extends BaseContainer {
       });
 
     const dropAsTexture = (color) => {
-      let dropRenderer = new PIXI.CanvasRenderer(50, 50, {transparent: true});
+      let dropRenderer = new PIXI.CanvasRenderer(100, 100, {transparent: true});
       let drop = new PIXI.Graphics();
       drop.beginFill(color, 1);
-      drop.drawCircle(30, 30, Config.drops.rad);
+      drop.drawCircle(50, 50, Config.drops.rad);
       drop.endFill();
       dropRenderer.render(drop);
       return dropRenderer.view;
