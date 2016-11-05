@@ -20,7 +20,7 @@ export const Config = {
 
 export const imageMappings = {};
 
-const dropsColor = [
+export const dropsColor = [
   0xff2c2c, 0x00c12c,
   0xff272c, 0xffff00,
   0xff2c2c, 0xffff00,

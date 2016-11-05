@@ -199,7 +199,6 @@ class Root extends BaseContainer {
 
     let percentage = this.get('gameContainer').animate();
     if (percentage !== undefined) {
-      console.log(percentage);
       animateLoader(percentage);
     } else {
       this.remove('loaderContainer');
@@ -278,7 +277,6 @@ function resize(){
     bg.height = window.innerHeight;
     resizeGameContainer();
   }
-  console.log(renderer.width, window.innerWidth);
 }
 /*
 

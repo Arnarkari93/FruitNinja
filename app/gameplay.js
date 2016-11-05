@@ -5,7 +5,7 @@
 
 import PIXI from 'pixi.js';
 
-import { Config, imageMappings } from './config';
+import { Config, imageMappings, dropsColor } from './config';
 import BaseContainer from './basecontainer';
 import { isIntersecting } from './helpers';
 import { LoaderContainer } from './others';
@@ -54,6 +54,21 @@ export default class GamePlayContainer extends BaseContainer {
       .load(() => {
         this.assetLoaded();
       });
+
+    const dropAsTexture = (color) => {
+      let dropRenderer = new PIXI.CanvasRenderer(50, 50, {transparent: true});
+      let drop = new PIXI.Graphics();
+      drop.beginFill(color, 1);
+      drop.drawCircle(30, 30, Config.drops.rad);
+      drop.endFill();
+      dropRenderer.render(drop);
+      return dropRenderer.view;
+    }
+
+    this.dropTextures = {};
+    dropsColor.forEach((color, i) => {
+      this.dropTextures[color] = new PIXI.Texture.fromCanvas(dropAsTexture(color));
+    });
   }
 
   addNewFruit() {
@@ -278,8 +293,19 @@ export default class GamePlayContainer extends BaseContainer {
       drop.beginFill(details.color, 1);
       drop.drawCircle(0, 0, details.radius);
       drop.endFill();
-      drop.vx = details.vx; drop.vy = details.vy;
+      drop.vx = details.vx;
+      drop.vy = details.vy;
       //drop.visible = details.visible;
+      drop.details = details;
+      return drop;
+    };
+
+    const getNewDropViaTexture = (details) => {
+      const drop = new PIXI.Sprite(this.dropTextures[details.color]);
+      drop.x = details.x;
+      drop.y = details.y;
+      drop.vx = details.vx;
+      drop.vy = details.vy;
       drop.details = details;
       return drop;
     };
@@ -305,7 +331,7 @@ export default class GamePlayContainer extends BaseContainer {
           color: mapping.dropColor,
           //visibleID: (Math.floor(Math.random()*2) === 0)
         };
-        this.add('drops', getNewDrop(details));
+        this.add('drops', getNewDropViaTexture(details));
       }
     };
 
