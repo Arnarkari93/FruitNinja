@@ -110,9 +110,11 @@ class Root extends BaseContainer {
           y: position.y
         });
 
-        // Keep only last two datapoints
-        if(this.mouseData.length == 3)
+        let knife = this.get('knife');
+        while(knife.shifts > 0) {
           this.mouseData.shift();
+          knife.shifts -= 1;
+        }
       }
     };
   }

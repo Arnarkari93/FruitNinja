@@ -8,6 +8,8 @@ import BaseContainer from './basecontainer';
 export default class Knife extends BaseContainer {
   constructor(...args) {
     super(...args);
+    // no of lines drawn
+    this.shifts = 0;
   }
 
   drawBlade(p1, p2) {
@@ -26,12 +28,14 @@ export default class Knife extends BaseContainer {
     this.getAll('blade').forEach((blade) => {
       if (blade.alpha < 0)
         this.remove('blade', blade.name);
-      blade.alpha -= 0.1;
+      blade.alpha -= 0.3;
     });
 
-    if (this.parent.mouseData.length < 2)
-      return;
+    let data = this.parent.mouseData;
 
-    this.drawBlade(...this.parent.mouseData);
+    for (let i = 1; i < data.length; i += 1) {
+      this.drawBlade(data[i-1], data[i]);
+      this.shifts += 1;
+    }
   }
 }
