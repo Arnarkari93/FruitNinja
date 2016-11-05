@@ -25,9 +25,6 @@ class Root extends BaseContainer {
     super(...args);
     this.interactive = true;
 
-    this.h = Config.wh;
-    this.w = Config.ww;
-
     this.pause = false;
     // true if Knife in cutting mode
     this.cutting = false;
@@ -61,7 +58,7 @@ class Root extends BaseContainer {
 
   gameInit() {
     const bg = new PIXI.Sprite(PIXI.Texture.fromFrame('bg.png'));
-    bg.height = this.h; bg.width = this.w;
+    bg.height = Config.wh; bg.width = Config.ww;
     bg.interactive = true;
     this.add('bg', bg, 0);
   }
@@ -194,7 +191,19 @@ class Root extends BaseContainer {
     if(this.pause)
       return;
 
-    this.get('gameContainer').animate();
+    const animateLoader = (percentage) => {
+      this.remove('loaderContainer');
+      const loader = new LoaderContainer(percentage);
+      this.add('loaderContainer', loader);
+    };
+
+    let percentage = this.get('gameContainer').animate();
+    if (percentage !== undefined) {
+      console.log(percentage);
+      animateLoader(percentage);
+    } else {
+      this.remove('loaderContainer');
+    }
 
     let action = this.get('gameContainer').handleOptionSelection();
     if(action != undefined) {
@@ -215,7 +224,6 @@ const stage = new Root();
 let prev = null;
 
 function resizeGameContainer() {
-
   const gameContainer = stage.get('gameContainer');
   const state = stage.state;
 
@@ -230,13 +238,14 @@ function resizeGameContainer() {
     }
   } else {
     if (gameContainer.loading) {
-      prev = {'x': gameContainer.scale.x, 'y': gameContainer.scale.y};
+      /*prev = {'x': gameContainer.scale.x, 'y': gameContainer.scale.y};
       gameContainer.scale.x *= window.innerWidth / Config.ww;
-      gameContainer.scale.y *= window.innerHeight / Config.wh;
+      gameContainer.scale.y *= window.innerHeight / Config.wh;*/
     } else {
       if(prev != null) {
         gameContainer.scale.x = prev.x;
         gameContainer.scale.y = prev.y;
+        prev = null;
       }
 
       if (stage.containerChange) {
@@ -258,18 +267,48 @@ function resizeGameContainer() {
 }
 
 function resize(){
-
   renderer.resize(window.innerWidth, window.innerHeight);
 
-  if (stage.filesLoaded == stage.filesToLoad) {
-    const bg = stage.get('bg');
-    bg.scale.x *= renderer.width / stage.w;
-    bg.scale.y *= renderer.height / stage.h;
-    resizeGameContainer();
-  }
   stage.w = renderer.width;
   stage.h = renderer.height;
+
+  if (stage.filesLoaded = stage.filesToLoad) {
+    const bg = stage.get('bg');
+    bg.width = window.innerWidth;
+    bg.height = window.innerHeight;
+    resizeGameContainer();
+  }
+  console.log(renderer.width, window.innerWidth);
 }
+/*
+
+function resizeGameContainer() {
+  let gameContainer = stage.get('gameContainer');
+  let state = gameContainer.state;
+  if(state == "archade mode" || state == "zen mode") {
+    gameContainer.scale.x *= window.innerWidth/Config.ww;
+    gameContainer.scale.y *= window.innerHeight/Config.wh;
+  }
+  else {
+    let scale = window.innerHeight/Config.wh;
+    if(window.innerHeight < 400) scale += 0.05;
+    // let scale = window.innerWidth/Config.ww;
+    gameContainer.scale.x *= scale;
+    gameContainer.scale.y *= scale;
+  }
+}
+
+function resize(){
+  // Called after load is complete
+
+  let bg = stage.get('bg');
+  bg.scale.x *= window.innerWidth/Config.ww;
+  bg.scale.y *= window.innerHeight/Config.wh;
+  // resize transition animation too
+
+  resizeGameContainer();
+  renderer.resize(window.innerWidth, window.innerHeight);
+}*/
 
 function animate() {
   stage.animate();
@@ -279,5 +318,3 @@ function animate() {
 
 window.addEventListener("resize", resize);
 animate();
-
-

@@ -180,20 +180,17 @@ export default class GameOptionsContainer extends BaseContainer {
     return selected;
   }
 
-  animateLoader() {
-    this.remove('loaderContainer');
-    let percentage = this.parent.filesLoaded/this.parent.filesToLoad;
-    percentage = Math.max(percentage, (+new Date - this.timestart)/500);
-    percentage = Math.min(percentage, 1);
-    let loader = new LoaderContainer(percentage);
-    this.add('loaderContainer', loader);
-  }
-
   animate() {
+    const getPercentLoad = () => {
+      let percentage = this.parent.filesLoaded/this.parent.filesToLoad;
+      percentage = Math.max(percentage, (+new Date - this.timestart)/500);
+      percentage = Math.min(percentage, 1);
+      return percentage;
+    };
+
     if ((this.parent.filesLoaded < this.parent.filesToLoad) ||
       (+new Date - this.timestart)/1000 < 0.5){
-      this.animateLoader();
-      return;
+      return getPercentLoad();
     }
 
     if (this.loading) {

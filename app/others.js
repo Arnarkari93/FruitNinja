@@ -129,8 +129,8 @@ export class LoaderContainer extends BaseContainer {
 
   constructor(percentage) {
     super();
-    this.w = Config.ww;
-    this.h = Config.wh;
+    this.w = window.innerWidth;
+    this.h = window.innerHeight;
     this.percentage = percentage;
     this.loaderWidth = this.w / 2;
     this.loaderHeight = 20;

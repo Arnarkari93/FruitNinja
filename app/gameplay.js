@@ -89,14 +89,11 @@ export default class GamePlayContainer extends BaseContainer {
 
     // Define animation function for all elements
 
-    const animateLoader = () => {
+    const getPercentLoad = () => {
       let percentage = this.filesLoaded / this.filesToLoad;
       percentage = Math.max(percentage, (+new Date - this.startTime) / 500);
       percentage = Math.min(percentage, 1);
-
-      this.remove('loaderContainer');
-      const loader = new LoaderContainer(percentage);
-      this.add('loaderContainer', loader);
+      return percentage;
     };
 
     const animateFruits = () => {
@@ -234,11 +231,10 @@ export default class GamePlayContainer extends BaseContainer {
     // Images not loaded yet
     if ((this.filesLoaded < this.filesToLoad) ||
         (+new Date - this.startTime) / 1000 < 0.5) {
-      animateLoader();
-      return;
+      return getPercentLoad();
     }
 
-    this.remove('loaderContainer');
+    // this.remove('loaderContainer');
 
     if(this.parent.cutting)
       this.score += this.handleNewFruitCuts();
