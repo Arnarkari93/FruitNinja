@@ -89,14 +89,14 @@ class Root extends BaseContainer {
         x: position.x,
         y: position.y
       });
-      this.add('knife', new Knife());
+      if (this.get('knife') === undefined)
+        this.add('knife', new Knife());
     };
   }
 
   onMouseUp() {
     return (e) => {
       this.cutting = false;
-      this.remove('knife');
       this.mouseData = [];
     };
   }

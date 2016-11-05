@@ -108,10 +108,11 @@ export class TextOnPerimiterContainer extends BaseContainer {
     this.text = text;
     this.style = {
       fontFamily:'Arial',
-      fontSize: 24,
+      fontSize: 30,
       fill: '#686868',
       align: 'center',
       fontWeight: 'bolder',
+      strokeThickness: 5,
     };
     this.drawText();
   }
@@ -119,7 +120,7 @@ export class TextOnPerimiterContainer extends BaseContainer {
   drawText() {
     // PIXI pivot abnormal behaviour
 
-    let theta = Math.PI/4;
+    let theta = -Math.PI/2;
     for(let i = 0; i < this.text.length; i += 1) {
       const text = new PIXI.Text(this.text[i], this.style);
       text.anchor.x = 0.5; text.anchor.y = 0.5;
