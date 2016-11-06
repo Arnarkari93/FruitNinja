@@ -14,6 +14,12 @@ export const Config = {
   splash: {
     size: 150,
   },
+  specialFruitLayerColor: {
+    frenzy: 0xEC7B17,
+    double: 0x118CDE,
+    freeze: 0xFFFFFF,
+    bomb: 0xFFFFFF,
+  },
   ww: 1301,
   wh: 654,
 };
@@ -26,13 +32,14 @@ export const dropsColor = [
   0xff2c2c, 0xffff00,
   0xff2c2c, 0x00c12c,
   0xff272c, 0xffff00,
-  '', 0x0000ff,
-  0xffff00, 0x0000ff,
+  0xff272c, 0xff2c2c,
+  0xffff00, '',
 ];
 
-imageMappings.numFruits = 10;
+// Ignoring "double"
+imageMappings.numFruits = 14;
 
-for (let i = 0; i < imageMappings.numFruits; i += 1) {
+for (let i = 0; i < 10; i += 1) {
   imageMappings[`fruit${i}`] = {
     hf1: `halffruit${2 * i}`,
     hf2: `halffruit${2 * i + 1}`,
@@ -41,10 +48,12 @@ for (let i = 0; i < imageMappings.numFruits; i += 1) {
   };
 }
 
-const specials = ['bomb', 'double', 'flenzy', 'freeze'];
+export const specials = ['frenzy', 'freeze', 'double', 'bomb'];
 
+// set mappings of special fruits and bomb here
 specials.forEach((e, i) => {
   imageMappings[e] = {
-    // set mappings of special fruits and bomb here
+    splash: `splash${i+10}`,
+    dropColor: dropsColor[i+10],
   };
 });
