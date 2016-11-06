@@ -88,41 +88,46 @@ export default class GamePlayContainer extends BaseContainer {
   animate() {
     if (this.parent.pause) return;
 
-    const addNewFruit = () => {
-      const details = {
-        x: (Math.random() * (Config.ww - 200)) + 50,
-        y: Config.wh,
-        vx: Math.max(1, Math.random() * Config.fruit.vx),
-        vy: Config.fruit.vy,
-        width: Config.fruit.size,
-        height: Config.fruit.size,
-        anchor: {
-          x: 0.5,
-          y: 0.5,
-        },
-        omega: Math.random() * 0.01 * (Math.random() > 0.5 ? 1 : -1),
-      };
+    const addNewFruits = () => {
 
-      if (details.x > Config.ww / 2)
-        details.vx *= -1;
-
-      // Randomly select a fruit
       const sampleFruit = () => {
         // let id = Math.floor(Math.random() * 10);
         let id = Math.floor(Math.random() * 14);
         return id;
       }
 
-      let id = sampleFruit();
-      const fruit = new PIXI.Sprite(PIXI.Texture.fromFrame(`fruit${id}.png`));
+      const getNewFruit = (id) => {
+        const details = {
+          x: (Math.random() * (Config.ww - 200)) + 50,
+          y: Config.wh,
+          vx: Math.max(1, Math.random() * Config.fruit.vx),
+          vy: Config.fruit.vy,
+          width: Config.fruit.size,
+          height: Config.fruit.size,
+          anchor: {
+            x: 0.5,
+            y: 0.5,
+          },
+          omega: Math.random() * 0.01 * (Math.random() > 0.5 ? 1 : -1),
+        };
 
-      if (id >= 10)
-        id = specials[id-10];
-      else
-        id = `fruit${id}`;
+        if (details.x > Config.ww / 2)
+          details.vx *= -1;
 
-      Object.assign(fruit, details, {id});
-      this.add('fruits', fruit);
+        const fruit = new PIXI.Sprite(PIXI.Texture.fromFrame(`fruit${id}.png`));
+
+        id = (id >= 10) ? specials[id-10] : `fruit${id}`;
+        Object.assign(fruit, details, {id});
+
+        return fruit;
+      }
+
+      let fruitCount = this.getAll('fruits').length;
+
+      if (fruitCount < this.fruitsThrowRate) {
+        this.add('fruits', getNewFruit(sampleFruit()));
+      }
+
     }
 
     // Define animation function for all elements
@@ -150,9 +155,6 @@ export default class GamePlayContainer extends BaseContainer {
         }
         count += 1;
       }
-
-      if (count < this.fruitsThrowRate)
-        addNewFruit();
 
       return fruitsMissed;
     };
@@ -247,6 +249,8 @@ export default class GamePlayContainer extends BaseContainer {
     }
 
     this.missed += animateFruits();
+
+    addNewFruits();
 
     animateDrops();
 
@@ -392,11 +396,12 @@ export default class GamePlayContainer extends BaseContainer {
         this.remove('halfFruits');
         this.remove('drops');
         this.remove('splashes');
+
         this.remove('specialFruitTakenLabels');
 
-        this.remove('scoreContainer');
-        this.remove('crossContainer');
-        this.remove('timeContainer');
+        this.remove('doubleLayer');
+        this.remove('frenzyLayer');
+        this.remove('freezeLayer');
       };
 
       switch (fruit.id) {
@@ -450,7 +455,7 @@ export default class GamePlayContainer extends BaseContainer {
       if (!checkIfIntersection(mouseData, fruit.getBounds()))
         continue;
 
-      noFruitCuts += 1 * this.scoreMultiplier;
+      noFruitCuts += ((fruit.id !== "bomb") ? 1 * this.scoreMultiplier : 0);
 
       // Fruit cut successfull: Add splashes, drops and remove fruit
       // Bomb
