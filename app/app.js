@@ -105,7 +105,7 @@ class Root extends BaseContainer {
   onMouseMove() {
     return (e) => {
       let position = e.data.global;
-      if(this.cutting) {
+      if (this.cutting) {
         this.mouseData.push({
           x: position.x,
           y: position.y
@@ -166,7 +166,7 @@ class Root extends BaseContainer {
 
     const prevState = this.state;
 
-    if(this.state == "about game" || this.state == "high score")
+    if (this.state == "about game" || this.state == "high score")
       this.state = "initial";
     else
       this.state = action;
@@ -191,7 +191,7 @@ class Root extends BaseContainer {
   }
 
   animate() {
-    if(this.pause)
+    if (this.pause)
       return;
 
     const animateLoader = (percentage) => {
@@ -208,14 +208,14 @@ class Root extends BaseContainer {
     }
 
     let action = this.get('gameContainer').handleOptionSelection();
-    if(action != undefined) {
+    if (action != undefined) {
         this.remove('gameContainer');
         this.containerChange = true;
         this.add('gameContainer', this.reduce(action));
         resizeGameContainer();
     }
 
-    if(this.get('knife') != undefined)
+    if (this.get('knife') != undefined)
       this.get('knife').animate();
   }
 
@@ -244,7 +244,7 @@ function resizeGameContainer() {
       gameContainer.scale.x *= window.innerWidth / Config.ww;
       gameContainer.scale.y *= window.innerHeight / Config.wh;*/
     } else {
-      if(prev !== null) {
+      if (prev !== null) {
         gameContainer.scale.x = prev.x;
         gameContainer.scale.y = prev.y;
         prev = null;
@@ -252,14 +252,14 @@ function resizeGameContainer() {
 
       if (stage.containerChange) {
         let scale = window.innerHeight / Config.wh;
-        if(window.innerHeight < 400) scale += 0.05;
+        if (window.innerHeight < 400) scale += 0.05;
         //  let scale = window.innerWidth / Config.ww;
         gameContainer.scale.x *= scale;
         gameContainer.scale.y *= scale;
         stage.containerChange = false;
       } else {
         let scale = renderer.height / stage.h;
-        if(renderer.width < 400) scale += 0.05;
+        if (renderer.width < 400) scale += 0.05;
         // let scale = window.innerWidth/Config.ww;
         gameContainer.scale.x *= scale;
         gameContainer.scale.y *= scale;
@@ -281,35 +281,6 @@ function resize(){
     resizeGameContainer();
   }
 }
-/*
-
-function resizeGameContainer() {
-  let gameContainer = stage.get('gameContainer');
-  let state = gameContainer.state;
-  if(state == "archade mode" || state == "zen mode") {
-    gameContainer.scale.x *= window.innerWidth/Config.ww;
-    gameContainer.scale.y *= window.innerHeight/Config.wh;
-  }
-  else {
-    let scale = window.innerHeight/Config.wh;
-    if(window.innerHeight < 400) scale += 0.05;
-    // let scale = window.innerWidth/Config.ww;
-    gameContainer.scale.x *= scale;
-    gameContainer.scale.y *= scale;
-  }
-}
-
-function resize(){
-  // Called after load is complete
-
-  let bg = stage.get('bg');
-  bg.scale.x *= window.innerWidth/Config.ww;
-  bg.scale.y *= window.innerHeight/Config.wh;
-  // resize transition animation too
-
-  resizeGameContainer();
-  renderer.resize(window.innerWidth, window.innerHeight);
-}*/
 
 function animate() {
   stage.animate();
