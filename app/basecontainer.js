@@ -92,14 +92,23 @@ export default class BaseContainer extends PIXI.Container {
      * Remove all elements corresponding to `name` reference
      * if uid not given, else remove element with name uid.
      */
-    if (uid === null) {
-      for(let e of this.getAll(name))
-        this.removeChild(e);
 
-      delete this[name];
-    } else {
-      this.removeChild(this.get(name, uid));
-      this[name].delete(uid);
+    const _remove = () => {
+      if (uid === null) {
+        for(let e of this.getAll(name))
+          this.removeChild(e);
+
+        delete this[name];
+      } else {
+        this.removeChild(this.get(name, uid));
+        this[name].delete(uid);
+      }
+    }
+
+    try {
+      _remove();
+    } catch (e) {
+      console.log(`${name} already removed`);
     }
   }
 
