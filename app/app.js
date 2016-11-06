@@ -89,8 +89,9 @@ class Root extends BaseContainer {
         x: position.x,
         y: position.y
       });
-      if (this.get('knife') === undefined)
+      if (this.get('knife') === undefined) {
         this.add('knife', new Knife());
+      }
     };
   }
 
@@ -127,7 +128,7 @@ class Root extends BaseContainer {
 
     let gameContainer;
 
-    switch(action) {
+    switch (action) {
       case "about game":
         gameContainer = new AboutGameContainer();
         break;
@@ -147,7 +148,7 @@ class Root extends BaseContainer {
 
     let gameContainer;
 
-    switch(action) {
+    switch (action) {
       case "zen mode":
       case "archade mode":
         gameContainer = new GamePlayContainer(action);
@@ -172,7 +173,7 @@ class Root extends BaseContainer {
 
     let gameContainer;
 
-    switch(prevState) {
+    switch (prevState) {
       case "initial":
         gameContainer = this.reduceInitial(action);
         break;
@@ -228,7 +229,7 @@ function resizeGameContainer() {
   const gameContainer = stage.get('gameContainer');
   const state = stage.state;
 
-  if (state == "archade mode" || state == "zen mode") {
+  if (state === "archade mode" || state === "zen mode") {
     if (stage.containerChange) {
       gameContainer.scale.x *= window.innerWidth / Config.ww;
       gameContainer.scale.y *= window.innerHeight / Config.wh;
@@ -243,7 +244,7 @@ function resizeGameContainer() {
       gameContainer.scale.x *= window.innerWidth / Config.ww;
       gameContainer.scale.y *= window.innerHeight / Config.wh;*/
     } else {
-      if(prev != null) {
+      if(prev !== null) {
         gameContainer.scale.x = prev.x;
         gameContainer.scale.y = prev.y;
         prev = null;
@@ -273,7 +274,7 @@ function resize(){
   stage.w = renderer.width;
   stage.h = renderer.height;
 
-  if (stage.filesLoaded = stage.filesToLoad) {
+  if (stage.filesLoaded === stage.filesToLoad) {
     const bg = stage.get('bg');
     bg.width = window.innerWidth;
     bg.height = window.innerHeight;
