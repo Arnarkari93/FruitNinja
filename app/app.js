@@ -56,6 +56,12 @@ class Root extends BaseContainer {
     this.loadTextures();
   }
 
+  restartGamePlay() {
+    let mode = this.get('gameContainer').mode;
+    this.remove('gameContainer');
+    this.add('gameContainer', new GamePlayContainer(mode));
+  }
+
   gameInit() {
     const bg = new PIXI.Sprite(PIXI.Texture.fromFrame('bg.png'));
     bg.height = Config.wh; bg.width = Config.ww;

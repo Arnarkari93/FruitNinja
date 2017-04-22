@@ -124,7 +124,7 @@ export class TextOnPerimiterContainer extends BaseContainer {
     for(let i = 0; i < this.text.length; i += 1) {
       const text = new PIXI.Text(this.text[i], this.style);
       text.anchor.x = 0.5; text.anchor.y = 0.5;
-      text.pivot.x = 0;
+      //text.pivot.x = 0;
       text.x = this.center.x;
       text.pivot.y = this.r;
       text.y = text.pivot.y + (this.center.y - this.r);

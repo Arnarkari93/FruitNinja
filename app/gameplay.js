@@ -23,12 +23,14 @@ export default class GamePlayContainer extends BaseContainer {
     this.mode = mode;
     this.score = 0;
     this.missed = 0;
+    this.simpleFruitsSent = 0;
+    this.gameover = false;
 
     this.freezeTimer = 0;
     this.frenzyTimer = 0;
     this.doubleTimer = 0;
     this.bombTimer = 0;
-    this.fruitsThrowRate = 2;
+    this.fruitsThrowRate = 3;
 
     this.loadTextures();
   }
@@ -86,13 +88,19 @@ export default class GamePlayContainer extends BaseContainer {
 
 
   animate() {
-    if (this.parent.pause) return;
+    if (this.parent.pause || this.gameover) return;
 
     const addNewFruits = () => {
 
       const sampleFruit = () => {
-        // let id = Math.floor(Math.random() * 10);
-        let id = Math.floor(Math.random() * 14);
+        let id;
+        if (this.simpleFruitsSent <= 6) {
+          id = Math.floor(Math.random() * 10);
+          this.simpleFruitsSent += 1;
+        } else {
+          id = Math.floor(Math.random() * 4) + 10;
+          this.simpleFruitsSent = 0;
+        }
         return id;
       }
 
@@ -127,7 +135,6 @@ export default class GamePlayContainer extends BaseContainer {
       if (fruitCount < this.fruitsThrowRate) {
         this.add('fruits', getNewFruit(sampleFruit()));
       }
-
     }
 
     // Define animation function for all elements
@@ -222,7 +229,7 @@ export default class GamePlayContainer extends BaseContainer {
       this.bombTimer = Math.max(this.bombTimer - 1, 0);
 
       if (this.frenzyTimer === 0)
-        this.fruitsThrowRate = 2;
+        this.fruitsThrowRate = 3;
 
       if (this.doubleTimer === 0)
         this.scoreMultiplier = 1;
@@ -250,7 +257,8 @@ export default class GamePlayContainer extends BaseContainer {
 
     this.missed += animateFruits();
 
-    addNewFruits();
+    if (this.bombTimer <= 0)
+      addNewFruits();
 
     animateDrops();
 
@@ -270,6 +278,69 @@ export default class GamePlayContainer extends BaseContainer {
 
     animateSpecialFruitTakenLabels();
     animateSpecialFruitTakenLayers();
+
+    if((this.mode === 'archade mode' && this.seconds === 0) ||
+       (this.mode === 'zen mode' && this.missed >= 3)) {
+      this.gameover = true;
+      this.initializeGameOverBoard();
+    }
+  }
+
+  initializeGameOverBoard() {
+    const layer = new PIXI.Graphics();
+    layer.beginFill(0x000000, 1);
+    layer.drawRect(0, 0, Config.ww, Config.wh);
+    layer.alpha = 0.3;
+    this.add('gameOverLayer', layer);
+
+    let gameover = new PIXI.Sprite(PIXI.Texture.fromFrame('gameover.png'));
+    gameover.anchor.x = 0.5;
+    gameover.anchor.y = 0.5;
+    gameover.x = Config.ww / 2;
+    gameover.y = Config.wh / 2 - 100;
+    this.add('gameOverLabel', gameover);
+
+    let best = new PIXI.Sprite(PIXI.Texture.fromFrame('best.png'));
+    best.x = 100;
+    best.y = 100;
+    this.add('bestLabel', best);
+
+    let style = {
+      fontFamily:'Arial',
+      fontSize: 25,
+      fill: '#FDCC05',
+      align: 'center',
+      fontWeight: 'bolder',
+      strokeThickness: 5,
+    };
+    let score = new PIXI.Text('Score', style);
+    score.x = Config.ww - 200;
+    score.y = 100;
+    score.scale.x = 2;
+    score.scale.y = 2;
+    this.add('scoreLabel', score);
+
+    let s = new PIXI.Text(this.score.toString(), style);
+    s.anchor.x = 0.5;
+    s.x = Config.ww - 200
+    this.add('score', s);
+
+    let re = new PIXI.Sprite(PIXI.Texture.fromFrame('restart.png'));
+    re.interactive = true;
+    re.anchor.x = 0.5;
+    re.anchor.y = 0.5;
+    re.x = Config.ww / 2;
+    re.y = Config.wh / 2;
+    re
+      .on('mousedown', this.restartGame)
+      .on('touchstart', this.restartGame);
+    this.add('restartLabel', re);
+  }
+
+  restartGame() {
+    return () => {
+      this.parent.restartGamePlay();
+    };
   }
 
   initializeBoard() {
@@ -406,7 +477,7 @@ export default class GamePlayContainer extends BaseContainer {
 
       switch (fruit.id) {
         case "frenzy":
-          this.fruitsThrowRate = 5;
+          this.fruitsThrowRate = 6;
           this.frenzyTimer = 500;
           break;
         case "double":
@@ -419,6 +490,10 @@ export default class GamePlayContainer extends BaseContainer {
         case "bomb":
           this.bombTimer = 100;
           this.score -= 10;
+          this.freezeTimer = 0;
+          this.scoreMultiplier = 1;
+          this.doubleTimer = 0;
+          this.frenzyTimer = 0;
           clearAll();
           break;
       }
@@ -440,6 +515,8 @@ export default class GamePlayContainer extends BaseContainer {
       layer.beginFill(Config.specialFruitLayerColor[fruit.id], 1);
       layer.drawRect(0, 0, Config.ww, Config.wh);
       layer.alpha = (fruit.id == "bomb") ? 1 : 0.3;
+
+      this.remove(`${fruit.id}Layer`);
       this.add(`${fruit.id}Layer`, layer);
 
       if (fruit.id !== 'bomb') {
